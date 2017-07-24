@@ -11,7 +11,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.security.SecureRandom;
 
-public class CrapsGUI.java extends JFrame
+public class CrapsGUI extends JFrame
 {
   // create secure random number generator for use in method rollDice
   private static final SecureRandom randomNumbers = new SecureRandom();
@@ -34,7 +34,7 @@ public class CrapsGUI.java extends JFrame
   public CrapsGUI()
   {
     JPanel p1 = new JPanel();
-    p1.setLayout = (new GridLayout(1,1, 2, 2));
+    p1.setLayout(new GridLayout(1,1, 2, 2));
     p1.add(roll = new JButton("Roll Dice"));
 
     JPanel p2 = new JPanel();
@@ -53,7 +53,7 @@ public class CrapsGUI.java extends JFrame
     jtext4.setEditable(false);
 
     JPanel p3 = new JPanel();
-    p3.setLayout(new GridLayout(2, 1, 2, 2,));
+    p3.setLayout(new GridLayout(2, 1, 2, 2));
     p3.add(gameStatusLabel = new JLabel(""));
     p3.add(playAgain = new JButton("Play Again"));
 
@@ -63,8 +63,8 @@ public class CrapsGUI.java extends JFrame
     getContentPane().add(p3, BorderLayout.SOUTH);
 
     ButtonHandler bHandler = new ButtonHandler();
-    roll.addActionListener(this);
-    playAgain.addActionListener(this);
+    roll.addActionListener(bHandler);
+    playAgain.addActionListener(bHandler);
 
     // Unnecessary? No user action on the text fields
     /*TextFieldHandler handler = new TextFieldHandler();
@@ -81,7 +81,9 @@ public class CrapsGUI.java extends JFrame
     {
       if(e.getSource() == roll)
       {
-        CrapsGUI.playCraps();
+        CrapsGUI game = new CrapsGUI();
+        game.rollDice();
+        //game.playCraps();
       }
 
       if(e.getSource() == playAgain)
@@ -99,7 +101,7 @@ public class CrapsGUI.java extends JFrame
 
 
   // plays one game of craps
-  public static void playCraps()
+  public void playCraps()
   {
     int myPoint = 0;   // point if no win or loss on first roll
     Status gameStatus;  // can contain CONTINUE, WON or LOST
@@ -121,7 +123,7 @@ public class CrapsGUI.java extends JFrame
       default:     // did not win or lose so remember point
       gameStatus = Status.CONTINUE;   // game is not over
       myPoint = sumOfDice;     // remember the point
-      jtext4.setText(myPoint);
+      jtext4.setText(String.valueOf(myPoint));
       break;
     }
     // while game is not complete
@@ -141,11 +143,11 @@ public class CrapsGUI.java extends JFrame
     if(gameStatus == Status.WON)
       gameStatusLabel.setText("Player wins!");
     else
-      gameStatusLabel("Player loses!");
+      gameStatusLabel.setText("Player loses!");
   }
 
   // roll dice, calculate sum and display results
-  public static int rollDice()
+  public int rollDice()
   {
     // pick random die values
     int die1 = 1 + randomNumbers.nextInt(6); // first die roll
@@ -154,17 +156,19 @@ public class CrapsGUI.java extends JFrame
     int sum = die1 + die2; // sum of die values
 
     // display the results of this roll
-    jtext1.setText(die1);
-    jtext2.setText(die2);
-    jtext3.setText(sum);
+    jtext1.setText(String.valueOf(die1));
+    jtext2.setText(String.valueOf(die2));
+    jtext3.setText(String.valueOf(sum));
 
     return sum;
   }
 
-
-
   public static void main(String[] args)
   {
-
+    CrapsGUI frame = new CrapsGUI();
+    frame.setTitle("Craps");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setSize(800, 400);
+    frame.setVisible(true);
   }
 }
