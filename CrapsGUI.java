@@ -27,7 +27,7 @@ public class CrapsGUI.java extends JFrame
   private static final int BOX_CARS = 12;
 
   // GUI fields
-  private JLabel jlabel1, jlabel2, jlabel3, jlabel4;
+  private JLabel jlabel1, jlabel2, jlabel3, jlabel4, gameStatusLabel;
   private JTextField jtext1, jtext2, jtext3, jtext4;
   private JButton roll, playAgain;
 
@@ -41,14 +41,20 @@ public class CrapsGUI.java extends JFrame
     p2.setLayout(new GridLayout(2, 2, 2, 2));
     p2.add(jlabel1 = new JLabel("Dice 1"));
     p2.add(jtext1 = new JTextField(2));
+    jtext1.setEditable(false);
     p2.add(jlabel2 = new JLabel("Dice 2"));
     p2.add(jtext2 = new JTextField(2));
+    jtext2.setEditable(false);
     p2.add(jlabel3 = new JLabel("Sum of Dice"));
     p2.add(jtext3 = new JTextField(2));
+    jtext3.setEditable(false);
     p2.add(jlabel4 = new JLabel("Points"));
     p2.add(jtext4 = new JTextField(2));
+    jtext4.setEditable(false);
 
     JPanel p3 = new JPanel();
+    p3.setLayout(new GridLayout(2, 1, 2, 2,));
+    p3.add(gameStatusLabel = new JLabel(""));
     p3.add(playAgain = new JButton("Play Again"));
 
     getContentPane().setLayout(new BorderLayout());
@@ -56,35 +62,44 @@ public class CrapsGUI.java extends JFrame
     getContentPane().add(p2, BorderLayout.CENTER);
     getContentPane().add(p3, BorderLayout.SOUTH);
 
+    ButtonHandler bHandler = new ButtonHandler();
     roll.addActionListener(this);
     playAgain.addActionListener(this);
 
-    TextFieldHandler handler = new TextFieldHandler();
+    // Unnecessary? No user action on the text fields
+    /*TextFieldHandler handler = new TextFieldHandler();
     jtext1.addActionListener(handler);
     jtext2.addActionListener(handler);
     jtext3.addActionListener(handler);
-    jtext4.addActionListener(handler);
+    jtext4.addActionListener(handler); */
   }
 
-  private class TextFieldHandler implements ActionListener
+  private class ButtonHandler implements ActionListener
   {
     @Override
-    public void actionPerformed(Action Event e)
+    public void actionPerformed(ActionEvent e)
     {
-      
+      if(e.getSource() == roll)
+      {
+        CrapsGUI.playCraps();
+      }
+
+      if(e.getSource() == playAgain)
+      {
+        jtext1.setText("");
+        jtext2.setText("");
+        jtext3.setText("");
+        jtext4.setText("");
+        // Clear sum and points counters
+
+      }
     }
   }
 
 
-  public static void main(String[] args)
-  {
-
-  }
-}
-
 
   // plays one game of craps
-  public static void main(String[] args)
+  public static void playCraps()
   {
     int myPoint = 0;   // point if no win or loss on first roll
     Status gameStatus;  // can contain CONTINUE, WON or LOST
@@ -106,7 +121,7 @@ public class CrapsGUI.java extends JFrame
       default:     // did not win or lose so remember point
       gameStatus = Status.CONTINUE;   // game is not over
       myPoint = sumOfDice;     // remember the point
-      System.out.printf("Point is %d\n", myPoint);
+      jtext4.setText(myPoint);
       break;
     }
     // while game is not complete
@@ -124,9 +139,9 @@ public class CrapsGUI.java extends JFrame
 
     // display won or lost message
     if(gameStatus == Status.WON)
-      System.out.println("Player wins");
+      gameStatusLabel.setText("Player wins!");
     else
-      System.out.println("Player loses");
+      gameStatusLabel("Player loses!");
   }
 
   // roll dice, calculate sum and display results
@@ -139,8 +154,17 @@ public class CrapsGUI.java extends JFrame
     int sum = die1 + die2; // sum of die values
 
     // display the results of this roll
-    System.out.printf("Player rolled %d + %d = %d\n", die1, die2, sum);
+    jtext1.setText(die1);
+    jtext2.setText(die2);
+    jtext3.setText(sum);
 
     return sum;
+  }
+
+
+
+  public static void main(String[] args)
+  {
+
   }
 }
